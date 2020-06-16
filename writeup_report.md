@@ -63,7 +63,9 @@ model.add(Dense(1))
 
 #### 3. Training Data Augmentation
 
-The training data used is the one provided with the project. The data has been augmented as follows.
+The training data used a mix of the one provided with the project and one lap of data collected on track two. This will help the model generalize and prevent overfitting.
+
+The data has been augmented as follows.
 1. The training data is highly biased towards taking left turns. In order to help the model generalize for both right and left turns, left-right flipped images are fed to the model during training.
 2. Left and right camera images have been included in the training set. The steering measurements for these images have been altered by a small amount. A small positive correction has been added to the left image and an equal negative correction has been added to the right image. This would help the model steer back the the center of the lane, in case the car veers off the desired position.
 
