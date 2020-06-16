@@ -56,7 +56,7 @@ def generator(samples, batch_size=32):
                     yield sklearn.utils.shuffle(X_train, y_train)
 
 # Set our batch size
-batch_size=128
+batch_size=32
 
 # compile and train the model using the generator function
 train_generator = generator(train_samples, batch_size=batch_size)
@@ -71,14 +71,14 @@ from math import ceil
 model = Sequential()
 model.add(Lambda(lambda x: x/127.5 - 1., input_shape=(160, 320, 3)))
 model.add(Cropping2D(cropping=((70,25),(0,0))))
-model.add(Conv2D(24,5,strides=(2,2),activation='relu'))
-model.add(Dropout(0.5))
-model.add(Conv2D(36,5,strides=(2,2),activation='relu'))
-model.add(Dropout(0.5))
-model.add(Conv2D(48,5,strides=(2,2),activation='relu'))
-model.add(Dropout(0.5))
-model.add(Conv2D(64,3,strides=(2,2),activation='relu'))
-model.add(Dropout(0.5))
+model.add(Conv2D(24,(5,10),strides=(2,2),activation='relu'))
+model.add(Dropout(0.75))
+model.add(Conv2D(36,(5,10),strides=(2,2),activation='relu'))
+model.add(Dropout(0.75))
+model.add(Conv2D(48,(5,10),strides=(2,2),activation='relu'))
+model.add(Dropout(0.75))
+model.add(Conv2D(64,(3,6),strides=(2,2),activation='relu'))
+model.add(Dropout(0.75))
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dense(50))
