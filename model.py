@@ -1,30 +1,19 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-# In[ ]:
-
-
 import csv
 import matplotlib.image as mpimg
 import matplotlib.pyplot as plt
 import numpy as np
-
-
-# In[ ]:
-
-
 import os
 import csv
+
+## Read in training data
 
 samples = []
 with open('./data/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for line in reader:
         samples.append(line)
-
-
-# In[ ]:
-
+        
+## Define a generator to feed online training data to the network 
 
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
@@ -73,6 +62,8 @@ batch_size=128
 train_generator = generator(train_samples, batch_size=batch_size)
 validation_generator = generator(validation_samples, batch_size=batch_size)
 
+## Model Architecture
+
 from keras.models import Sequential
 from keras.layers import *
 from math import ceil
@@ -81,14 +72,20 @@ model = Sequential()
 model.add(Lambda(lambda x: x/127.5 - 1., input_shape=(160, 320, 3)))
 model.add(Cropping2D(cropping=((70,25),(0,0))))
 model.add(Conv2D(24,5,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Conv2D(36,5,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Conv2D(48,5,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Conv2D(64,3,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dense(50))
 model.add(Dense(10))
 model.add(Dense(1))
+
+## Compile and train the network
 
 model.compile(loss='mse', optimizer='adam')
 
@@ -97,6 +94,8 @@ model.fit_generator(train_generator,
             validation_data=validation_generator,
             validation_steps=ceil(len(validation_samples)*6/batch_size),
             epochs=5, verbose=1)
+
+## Save the trained network
 
 model.save('model.h5')
 

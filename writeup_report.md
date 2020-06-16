@@ -40,12 +40,16 @@ Following code block explanes the network architecture.
 
 ```python
 model = Sequential()
-model.add(Lambda(lambda x: x/127.5 - 1., input_shape=(160, 320,3)))
+model.add(Lambda(lambda x: x/127.5 - 1., input_shape=(160, 320, 3)))
 model.add(Cropping2D(cropping=((70,25),(0,0))))
 model.add(Conv2D(24,5,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Conv2D(36,5,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Conv2D(48,5,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Conv2D(64,3,strides=(2,2),activation='relu'))
+model.add(Dropout(0.5))
 model.add(Flatten())
 model.add(Dense(100))
 model.add(Dense(50))
@@ -67,7 +71,8 @@ The training data used is the one provided with the project. The data has been a
 
 #### 4. Training Strategy
 
-In order to gauge how well the model was working, the training data is split in training and validation set. 20% of the entire data is used as a validation set after shuffling. Overfitting the avoided by limiting the number of epochs.
+In order to gauge how well the model was working, the training data is split in training and validation set. 20% of the entire data is used as a validation set after shuffling. Dropout layers have been added after every convolutional layer to prevent overfitting. The dropout percentage and number of epochs are chosen carefully to prevent overfitting.
+
 The final trained model drives well around the track and all wheels stay within the driving area throughout the run.
 
 The total number of data points after augmentation would be 48,216 images. Adam optimizer has been used to train the network.
